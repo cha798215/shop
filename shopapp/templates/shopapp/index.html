@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Urmart</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body style="margin: 80px;">
+<div class="container">
+  <div class="col-md-12">
+    {% for error in form.errors.values %}
+      <div class="alert alert-danger">
+        {{ error }}
+      </div>
+    {% endfor %}
+    <form class="form-inline" action="{% url 'index' %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+          {{ form.product }}
+          {{ form.qty }}
+          <button type="submit" class="btn btn-default" style="border-radius: 50%;">+</button>
+      </div>
+      <div class="form-group">
+        <div class="col">
+          {{ form.customer_id }}
+        </div>
+        <div class="col checkbox">
+          <label>{{ form.vip }} 是否為 VIP 身份</label>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-md-12">
+    <h2>商品列表</h2>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Product ID</th>
+          <th>stock_pcs</th>
+          <th>price</th>
+          <th>shop_id</th>
+          <th>vip</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>{{ product.id }}</td>
+          <td>{{ product.stock_pcs }}</td>
+          <td>{{ product.price }}</td>
+          <td>{{ product.shop_id }}</td>
+          <td>
+            <span class="glyphicon glyphicon-{% if product.vip %}ok{% else %}remove{% endif %}-sign"></span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-12">
+    <h2>訂單記錄</h2>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>product_id</th>
+          <th>qty</th>
+          <th>price</th>
+          <th>shop_id</th>
+          <th>Customer ID</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr id="order_{{ order.id }}">
+          <td>{{ order.id }}</td>
+          <td>{{ order.product_id }}</td>
+          <td>{{ order.qty }}</td>
+          <td>{{ order.price }}</td>
+          <td>{{ order.product.shop_id }}</td>
+          <td>{{ order.customer_id }}</td>
+          <td><button class="btn btn-default js-delete-order" data-id="{{ order.id }}" style="border-radius: 50%;">-</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-12">
+    {% for product in top_three %}
+      <button type="button" class="btn btn-success btn-lg" style="border-radius: 12px;">{{ product.name }}</button>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  $('body').on('click', '.js-delete-order', function (e) {
+    $.ajax({
+      url: "/api/order/" + this.dataset.id,
+      type: 'DELETE',
+      dataType: 'json',
+      success: () => {
+        document.getElementById("order_" + this.dataset.id).remove();
+      },
+    });
+  });
+</script>
+
+</body>
+</html>
