@@ -13,7 +13,6 @@ repos:
     -   id: requirements-txt-fixer
         args:
         - requirements.txt
-        - requirements_dev.txt
     -   id: check-ast
         language_version: python3.7
     -   id: check-yaml
