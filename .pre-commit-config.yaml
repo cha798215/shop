@@ -1,0 +1,50 @@
+repos:
+-   repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: v2.5.0
+    hooks:
+    -   id: trailing-whitespace
+        exclude: \.(js|html)$
+    -   id: flake8
+        language_version: python3.7
+        args:
+        - --ignore=E203, E501, W503, W605
+        - --exclude=*/*migrations/*
+    -   id: check-byte-order-marker
+    -   id: requirements-txt-fixer
+        args:
+        - requirements.txt
+        - requirements_dev.txt
+    -   id: check-ast
+        language_version: python3.7
+    -   id: check-yaml
+        exclude: \.github/*
+    -   id: debug-statements
+        language_version: python3.7
+    -   id: end-of-file-fixer
+        language_version: python3.7
+    -   id: fix-encoding-pragma
+        language_version: python3.7
+-   repo: https://github.com/pycqa/isort
+    rev: 5.9.2
+    hooks:
+    -   id: isort
+        args: ["--profile", "black", "--filter-files"]
+        language_version: python3.7
+-   repo: https://github.com/pre-commit/mirrors-autopep8
+    rev: v1.5.7
+    hooks:
+    -   id: autopep8
+        args:
+        - -i
+        - --ignore=E203, E501
+-   repo: https://github.com/asottile/add-trailing-comma
+    rev: v2.1.0
+    hooks:
+    -   id: add-trailing-comma
+        language_version: python3.7
+-   repo: https://github.com/ambv/black
+    rev: 21.7b0
+    hooks:
+    - id: black
+      exclude: migrations
+      language_version: python3.7
